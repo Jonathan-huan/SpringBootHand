@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzh.homework1.infra.mapper.TeacherMapper">
+    <insert id="insertTeacher">
+        insert into Teachers((firstName,lastName,dateOfBirth,gender,email,phoneNumber,department) values(#{firstName},#{lastName},#{dateOfBirth},#{gender},#{email},#{phoneNumber},#{department});
+    </insert>
+    <update id="updateTeacher">
+        update Teachers set firstName=#{firstName}, lastName=#{lastName}, dateOfBirth=#{dateOfBirth}, gender=#{gender}, email=#{email}, phoneNumber=#{phoneNumber}, department=#{department} where teacherId = #{teacherId};
+    </update>
+    <delete id="deleteTeacherById">
+        delete from Teachers where teacherId = #{id}
+    </delete>
+    <select id="getTeacherById" resultType="com.hzh.homework1.domain.entity.Teacher">
+        select * from Teachers where teacherId = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzh.homework1.infra.mapper.GradeMapper">
+    <insert id="insertGrade">
+        insert into Grades(studentId, courseId, score) values(#{studentId}, #{courseId}, #{score})
+    </insert>
+    <update id="updateGrade">
+        update Grades set studentId = #{studentId}, courseId=#{courseId}, score=#{score} where gradeId = #{gradeId}
+    </update>
+    <delete id="deleteGradeById">
+        delete from Grades where gradeId = #{id}
+    </delete>
+    <select id="getGradeById" resultType="com.hzh.homework1.domain.entity.Grade">
+        select * from Grades where gradeId = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzh.homework1.infra.mapper.StudentMapper">
+    <resultMap id="studentCourseGrade" type="com.hzh.homework1.domain.vo.StudentCourseGradeVO">
+        <id column="studentId" property="studentID"/>
+        <collection property="courseGradeVOList" ofType="com.hzh.homework1.domain.vo.CourseGradeVO">
+            <result column="score" property="score"/>
+            <association property="course" javaType="com.hzh.homework1.domain.entity.Course">
+                <id column="courseID" property="courseID"/>
+                <result column="courseName" property="courseName"/>
+                <result column="description" property="description"/>
+                <result column="teacherID" property="teacherID"/>
+            </association>
+        </collection>
+    </resultMap>
+    <select id="getStudentCourseGradeVOByStudentId" resultMap="studentCourseGrade">
+        select s.studentID,c.*,g.score from Students s
+        left join Grades g on s.studentId = g.studentId
+        left join Courses c on c.courseId = g.courseId
+        where s.studentId = #{studentId}
+    </select>
+    <insert id="insertStudent">
+        insert into Students(firstName,lastName,dateOfBirth,gender,email,phoneNumber,address) values(#{firstName},#{lastName},#{dateOfBirth},#{gender},#{email},#{phoneNumber},#{address});
+    </insert>
+    <update id="updateStudent">
+        update Students set firstName=#{firstName}, lastName=#{lastName}, dateOfBirth=#{dateOfBirth}, gender=#{gender}, email=#{email}, phoneNumber=#{phoneNumber}, address=#{address} where studentId = #{studentId}
+    </update>
+    <delete id="deleteStudentById">
+        delete from Students where studentId = #{id}
+    </delete>
+    <delete id="deleteStudents">
+        delete from Students where studentId in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getStudentById" resultType="com.hzh.homework1.domain.entity.Student">
+        select * from Students where studentId = #{id}
+    </select>
+    <select id="searchStudents" resultType="com.hzh.homework1.domain.entity.Student">
+        select * from Students
+        <where>
+            <if test="gender != null and gender != ''">
+                and gender = #{gender}
+            </if>
+            <if test="lastName != null and lastName != ''">
+                and lastName = #{lastName}
+            </if>
+        </where>
+    </select>
+</mapper>
