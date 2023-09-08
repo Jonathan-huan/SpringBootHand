@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>学生管理</h1>
+    <input type="search" placeholder="请输入学生性别" id="searchInput" th:value="${gender}"/>
+    <button onclick="searchStudent()">搜索</button>
+    <button onclick="addStudent()">添加</button>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>学号</th>
+                <th>名字</th>
+                <th>姓氏</th>
+                <th>性别</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student:${studentList}">
+                <td th:text="${student.studentID}"></td>
+                <td th:text="${student.firstName}"></td>
+                <td th:text="${student.lastName}"></td>
+                <td th:text="${student.gender}"></td>
+                <td>
+                    <button th:onclick="'editStudent(' + ${student.studentID}+')'">编辑</button>
+                    <button th:onclick="'deleteStudent('+${student.studentID}+')'">删除</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!--添加学生dialog-->
+    <dialog id="addDialog" style="width: 300px;height: 200px;">
+        <form action="/student" method="post">
+            <div>
+                <label for="studentID">学号：</label>
+                <input type="text" id="studentID" name="studentID" placeholder="请输入学号"/>
+            </div>
+            <div>
+                <label for="firstName">名字：</label>
+                <input type="text" id="firstName" name="firstName" placeholder="请输入名字"/>
+            </div>
+            <div>
+                <label for="lastName">姓氏：</label>
+                <input type="text" id="lastName" name="lastName" placeholder="请输入姓氏"/>
+            </div>
+            <div>
+                <label for="gender">性别：</label>
+                <input type="text" id="gender" name="gender" placeholder="请输入性别"/>
+            </div>
+            <div>
+                <button type="submit">添加</button>
+                <button type="button" onclick="document.getElementById('addDialog').close()">取消</button>
+            </div>
+        </form>
+    </dialog>
+    <!--编辑学生dialog-->
+    <dialog id="editDialog" style="width: 300px;height: 200px;">
+        <form>
+            <div>
+                <label for="editStudentID">学号：</label>
+                <input type="text" id="editStudentID" name="studentID" placeholder="请输入学号"/>
+            </div>
+            <div>
+                <label for="editFirstName">名字：</label>
+                <input type="text" id="editFirstName" name="firstName" placeholder="请输入名字"/>
+            </div>
+            <div>
+                <label for="editLastName">姓氏：</label>
+                <input type="text" id="editLastName" name="lastName" placeholder="请输入姓氏"/>
+            </div>
+            <div>
+                <label for="editGender">性别：</label>
+                <input type="text" id="editGender" name="gender" placeholder="请输入性别"/>
+            </div>
+            <div>
+                <button type="button" onclick="editStudentConfirm()">修改</button>
+                <button type="button" onclick="document.getElementById('editDialog').close()">取消</button>
+            </div>
+        </form>
+    </dialog>
+</body>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function searchStudent() {
+        window.location.href = "/student/info?gender=" + document.getElementById("searchInput").value;
+    }
+    function addStudent(){
+        document.getElementById('addDialog').showModal();
+    }
+    function editStudent(id){
+        var student={};
+        axios.get("/student/"+id).then(function (response){
+            student = response.data;
+            document.getElementById("editStudentID").value = student.studentID;
+            document.getElementById("editFirstName").value = student.firstName;
+            document.getElementById("editLastName").value = student.lastName;
+            document.getElementById("editGender").value=student.gender;
+        }).catch(function (error){
+            console.log(error);
+        });
+        document.getElementById('editDialog').showModal();
+    }
+    function deleteStudent(studentID){
+        axios.delete("/student/" + studentID).then(function (response) {
+            console.log(response);
+            window.location.reload();
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+    function editStudentConfirm(){
+        let student ={
+            studentID:document.getElementById("editStudentID").value,
+            firstName:document.getElementById("editFirstName").value,
+            lastName:document.getElementById("editLastName").value,
+            gender:document.getElementById("editGender").value
+        };
+        axios.put("/student",student).then(function (response){
+            console.log(response);
+            window.location.reload();
+        }).catch(function (error){
+            console.log(error);
+        });
+    }
+</script>
+</html>

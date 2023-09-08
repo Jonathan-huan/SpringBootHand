@@ -6,6 +6,7 @@ import com.hzh.homework1.domain.vo.StudentCourseGradeVO;
 import com.hzh.homework1.infra.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public boolean insertStudent(@RequestBody Student student) {
+    public boolean insertStudent(Student student) {
         return studentService.insertStudent(student);
     }
 
@@ -48,5 +49,16 @@ public class StudentController {
     @GetMapping("/course-grade/{studentId}")
     public StudentCourseGradeVO getStudentCourseGradeVoByStudentId(@PathVariable Integer studentId){
         return studentService.getStudentCourseGradeVOByStudentId(studentId);
+    }
+
+    @GetMapping("/info")
+    public ModelAndView studentInfo(String gender, String lastName){
+        List<Student> studentList = studentService.searchStudents(gender, lastName);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("studentList", studentList);
+        modelAndView.addObject("gender",gender);
+        modelAndView.addObject("lastName",lastName);
+        modelAndView.setViewName("student");
+        return modelAndView;
     }
 }

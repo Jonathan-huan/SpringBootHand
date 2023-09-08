@@ -23,7 +23,7 @@
         insert into Students(firstName,lastName,dateOfBirth,gender,email,phoneNumber,address) values(#{firstName},#{lastName},#{dateOfBirth},#{gender},#{email},#{phoneNumber},#{address});
     </insert>
     <update id="updateStudent">
-        update Students set firstName=#{firstName}, lastName=#{lastName}, dateOfBirth=#{dateOfBirth}, gender=#{gender}, email=#{email}, phoneNumber=#{phoneNumber}, address=#{address} where studentId = #{studentId}
+        update Students set firstName=#{firstName}, lastName=#{lastName}, dateOfBirth=#{dateOfBirth}, gender=#{gender}, email=#{email}, phoneNumber=#{phoneNumber}, address=#{address} where studentID = #{studentID}
     </update>
     <delete id="deleteStudentById">
         delete from Students where studentId = #{id}
